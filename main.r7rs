@@ -2,13 +2,32 @@
 ; https://github.com/lexi-lambda/racket-r7rs
 
 (import (scheme base)
-        (scheme write))
+        (scheme write)
+        (scheme process-context))
+
+(define main
+  (lambda ()
+    (if (eqv? 2 (length (command-line)))
+        (tests)
+        (repl))))
+
+(define repl
+  (lambda ()
+    (define loop
+      (lambda ()
+        (display "> ")
+        (let ((line (read-line)))
+          (if (not (string=? line "quit")) (loop)))))
+    (loop)))
 
 (define print
   (lambda (x)
     (display x)
     (newline)))
 
-(print "Hello world!")
+; TESTS
+(define tests
+  (lambda ()
+    (+ 1 1)))
 
-(print (+ 4 3))
+(main)
