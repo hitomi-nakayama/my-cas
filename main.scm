@@ -27,17 +27,4 @@
     args)
   (newline))
 
-(define (->string obj)
-  (cond
-    ((string? obj) obj)
-    ((number? obj) (number->string obj))
-    ((symbol? obj) (symbol->string obj))
-    ((boolean? obj) (if obj "#t" "#f"))
-    ((null? obj) "()")
-    ((list? obj) (list->string obj))
-    ((vector? obj) (vector->string obj))
-    (else (error "->string: unknown type" obj))))
-
-; TESTS
-
 (main)
