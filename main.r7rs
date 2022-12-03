@@ -1,6 +1,3 @@
-#lang r7rs
-; https://github.com/lexi-lambda/racket-r7rs
-
 (import (scheme base)
         (scheme write)
         (scheme process-context))
@@ -55,6 +52,22 @@
       (display " "))
     args)
   (newline))
+
+(define (->string obj)
+  (cond
+    ((string? obj) obj)
+    ((number? obj) (number->string obj))
+    ((symbol? obj) (symbol->string obj))
+    ((boolean? obj) (if obj "#t" "#f"))
+    ((null? obj) "()")
+    ((list? obj) (list->string obj))
+    ((vector? obj) (vector->string obj))
+    (else (error "->string: unknown type" obj))))
+
+(define (assert= expected actual)
+  (if (not (eqv? expected actual))
+    (error (list "Expected: " expected " Actual: " actual))))
+
 
 ; TESTS
 (define (tests)
