@@ -1,0 +1,14 @@
+#lang r7rs
+; https://github.com/lexi-lambda/racket-r7rs
+
+(import (scheme base)
+        (scheme write))
+
+(define print
+  (lambda (x)
+    (display x)
+    (newline)))
+
+(print "Hello world!")
+
+(print (+ 4 3))
