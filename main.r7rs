@@ -17,13 +17,49 @@
       (lambda ()
         (display "> ")
         (let ((line (read-line)))
-          (if (not (string=? line "quit")) (loop)))))
+          (if (not (string=? line "quit"))
+            (begin
+              (let ((tokens (tokenize line)))
+                (print tokens))
+              (loop)
+              )))))
     (loop)))
 
-(define print
-  (lambda (x)
-    (display x)
-    (newline)))
+(define (tokenize str)
+  (string-split str #\space)
+)
+
+; return a list of strings
+; str: string to split
+; sep: character to split on
+(define string-split
+  (lambda (str sep)
+    (string-split-impl str sep 0 0 '())))
+
+(define string-split-impl
+  (lambda (str sep word-start current-index result)
+    (print "result:" result)
+    (if (< current-index (string-length str))
+      (let ((char (string-ref str current-index)))
+        (if (eqv? sep char)
+          (begin
+            (print "space" current-index)
+            (print (substring str word-start current-index))
+            (string-split-impl str sep (+ 1 current-index)
+                                       (+ 1 current-index)
+                                       (cons (substring str word-start current-index) result)))
+          (string-split-impl str sep word-start (+ current-index 1) result)))
+      (begin  ; end of string
+        (print (substring str word-start current-index))
+        (cons (substring str word-start current-index) result)))))
+
+(define (print . args)
+  (for-each
+    (lambda (x)
+      (display x)
+      (display " "))
+    args)
+  (newline))
 
 ; TESTS
 (define tests
