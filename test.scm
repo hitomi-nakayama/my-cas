@@ -21,8 +21,12 @@
                       (shunting-yard (list 3 + 4 * 2 / #\( 1 - 5 #\) expt 2 expt 3)))
 
 ; ======== table ========
-(let ((my-table (table string=? (("a") 1) (("b") 2))))
+(let ((my-table (table (string=?) (("a") 1) (("b") 2))))
   (test-assert "table-keys" (list= string=? '("a" "b") (table-keys my-table)))
   (test "table-find-pair" (cons "a" 1) (table-find-pair my-table "a"))
   (test "table-ref-exists" 1 (table-ref my-table "a"))
   (test-error "table-ref-not-exist" (table-ref my-table "z")))
+
+(let ((my-table (table () ((1) 11) ((2) 22))))
+  (test-assert "table-no-key-eq-keys" (list= eqv? '(1 2) (table-keys my-table)))
+  (test "table-find-no-key-eq-pair" (cons 1 11) (table-find-pair my-table 1)))

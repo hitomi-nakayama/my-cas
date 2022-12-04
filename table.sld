@@ -11,17 +11,17 @@
     ; key-eq is a function that takes two keys and returns #t if they are equal
     ;
     ; Example usage
-    ; (table (('a) 12)
+    ; (table () (('a) 12)
     ;        (('b) 34))
     ; Usage with string keys:
-    ; (table string=? (("X") 100)
-    ;                 (("Y") 200))
+    ; (table (string=?) (("X") 100)
+    ;                   (("Y") 200))
     (define-syntax table
       (syntax-rules ()
-        ((_ ((a) b) ...)
+        ((_ () ((a) b) ...)
           (let ((data (list (cons a b) ...)))
             (table-record data eqv?)))
-        ((_ key-eq ((a) b) ...)
+        ((_ (key-eq) ((a) b) ...)
           (let ((data (list (cons a b) ...)))
             (table-record data key-eq)))))
 
