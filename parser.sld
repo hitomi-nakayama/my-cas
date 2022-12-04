@@ -47,11 +47,9 @@
           (append (reverse output) operator-stack)))
 
     (define (operator? token)
-      (or (eq? token +)
-          (eq? token -)
-          (eq? token *)
-          (eq? token /)
-          (eq? token expt)))
+      (any (lambda (x)
+              (eqv? x token))
+            operators))
 
     (define (precedence op)
       (if (or (eqv? + op) (eqv? - op))
@@ -73,6 +71,8 @@
           (if (eqv? expt op)
             'right
             (error "unknown operator" op)))))
+
+    (define operators (list + - * / expt))
 
     (define lparen #\x28)
     (define rparen #\x29)))
