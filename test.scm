@@ -1,7 +1,9 @@
 (import (scheme base)
         (scheme write)
+        (srfi 1)
         (chibi test)
         (parser)
+        (table)
         (tokens)
         (strings))
 
@@ -17,3 +19,10 @@
                              (shunting-yard (list 3 + 4)))
 (test "shunting-yard" (list 3 4 2 * 1 5 - 2 3 expt expt / +)
                       (shunting-yard (list 3 + 4 * 2 / #\( 1 - 5 #\) expt 2 expt 3)))
+
+; ======== table ========
+(let ((my-table (table string=? (("a") 1) (("b") 2))))
+  (test-assert "table-keys" (list= string=? '("a" "b") (table-keys my-table)))
+  (test "table-find-pair" (cons "a" 1) (table-find-pair my-table "a"))
+  (test "table-ref-exists" 1 (table-ref my-table "a"))
+  (test-error "table-ref-not-exist" (table-ref my-table "z")))
