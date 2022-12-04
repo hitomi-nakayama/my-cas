@@ -1,7 +1,8 @@
 (import (scheme base)
         (scheme write)
         (scheme process-context)
-        (tokens))
+        (tokens)
+        (output))
 
 (define (main)
   (if (eqv? 2 (length (command-line)))
@@ -18,13 +19,5 @@
             (print tokens))
           (loop)))))
   (loop))
-
-(define (print . args)
-  (for-each
-    (lambda (x)
-      (display x)
-      (display " "))
-    args)
-  (newline))
 
 (main)
