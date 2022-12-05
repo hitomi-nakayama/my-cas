@@ -1,5 +1,10 @@
 (define-library (table)
-  (export table <table> table-ref table-find-pair table-keys)
+  (export <table>
+          table
+          table-find-pair
+          table-has-key?
+          table-keys
+          table-ref)
   (import (scheme base)
           (srfi 1))
   (begin
@@ -36,6 +41,9 @@
         (if pair
             (cdr pair)
             (error "table-ref: no such key" k))))
+
+    (define (table-has-key? t k)
+      (not (eqv? #f (table-find-pair t k))))
 
     (define (table-find-pair t k)
       (assoc k (table-key-values t) (table-key-eq t)))

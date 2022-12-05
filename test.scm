@@ -25,7 +25,9 @@
   (test-assert "table-keys" (list= string=? '("a" "b") (table-keys my-table)))
   (test "table-find-pair" (cons "a" 1) (table-find-pair my-table "a"))
   (test "table-ref-exists" 1 (table-ref my-table "a"))
-  (test-error "table-ref-not-exist" (table-ref my-table "z")))
+  (test-error "table-ref-not-exist" (table-ref my-table "z"))
+  (test "table-has-key?-true" #t (table-has-key? my-table "a"))
+  (test "table-has-key?-false" #f (table-has-key? my-table "w")))
 
 (let ((my-table (table () ((1) 11) ((2) 22))))
   (test-assert "table-no-key-eq-keys" (list= eqv? '(1 2) (table-keys my-table)))
