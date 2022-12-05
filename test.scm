@@ -16,6 +16,10 @@
                              (shunting-yard '(3 + 4)))
 (test "shunting-yard" '(3 4 2 * 1 5 - 2 3 expt expt / +)
                       (shunting-yard '(3 + 4 * 2 / #\( 1 - 5 #\) expt 2 expt 3)))
+(test "rpn-to-sexp-add-mul" '(+ 3 (* 4 2))
+                            (rpn-to-sexp '(3 4 2 * +)))
+(test "rpn-to-sexp-expt" '(expt  2 8)
+                            (rpn-to-sexp '(2 8 expt)))
 
 ; ======== strings ========
 (test "concat" "a1b2" (concat "a" 1 "b" 2))
