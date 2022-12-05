@@ -7,10 +7,7 @@
         (tokens)
         (strings))
 
-(test "string-split" (list "abc" "def" "ghi") (string-split "abc def ghi" #\space))
-(test "string-split-single" (list "test") (string-split "test" #\space))
-
-(test "concat" "a1b2" (concat "a" 1 "b" 2))
+(test-begin "tests")
 
 ; ======== parser ========
 (test "operator?-plus" #t (operator? +))
@@ -19,6 +16,9 @@
                              (shunting-yard (list 3 + 4)))
 (test "shunting-yard" (list 3 4 2 * 1 5 - 2 3 expt expt / +)
                       (shunting-yard (list 3 + 4 * 2 / #\( 1 - 5 #\) expt 2 expt 3)))
+
+; ======== strings ========
+(test "concat" "a1b2" (concat "a" 1 "b" 2))
 
 ; ======== table ========
 (let ((my-table (table (string=?) (("a") 1) (("b") 2))))
@@ -32,3 +32,11 @@
 (let ((my-table (table () ((1) 11) ((2) 22))))
   (test-assert "table-no-key-eq-keys" (list= eqv? '(1 2) (table-keys my-table)))
   (test "table-find-no-key-eq-pair" (cons 1 11) (table-find-pair my-table 1)))
+
+; ======== tokens ========
+(test "string-split" (list "abc" "def" "ghi") (string-split "abc def ghi" #\space))
+(test "string-split-single" (list "test") (string-split "test" #\space))
+
+
+(test-end "tests")
+(test-exit)
