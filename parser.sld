@@ -3,7 +3,8 @@
   (import (scheme base)
           (scheme write)
           (srfi 1)
-          (output))
+          (output)
+          (table))
   (begin
     (define (shunting-yard tokens)
       (shunting-yard-impl tokens '() '()))
@@ -46,33 +47,31 @@
             (else (error "Invalid token" lookahead))))
           (append (reverse output) operator-stack)))
 
+    (define-record-type <operator-attr>
+      (operator-attr precedence associativity)
+      operator-attr?
+      (precedence operator-precedence)
+      (associativity operator-associativity))
+
+    (define operators
+      (table ()
+        ((+) (operator-attr 1 'left))
+        ((-) (operator-attr 1 'left))
+        ((*) (operator-attr 2 'left))
+        ((/) (operator-attr 2 'left))
+        ((expt) (operator-attr 3 'right))))
+
     (define (operator? token)
-      (any (lambda (x)
-              (eqv? x token))
-            operators))
+      (table-has-key? operators token))
 
     (define (precedence op)
-      (if (or (eqv? + op) (eqv? - op))
-        1
-        (if (or (eqv? * op) (eqv? / op))
-          2
-          (if (eqv? expt op)
-            3
-            (error "unknown operator" op)))))
+      (operator-precedence (table-ref operators op)))
 
     (define (left-associative? op)
       (eqv? (associativity op) 'left))
 
     (define (associativity op)
-      (if (or (eqv? + op) (eqv? - op))
-        'left
-        (if (or (eqv? * op) (eqv? / op))
-          'left
-          (if (eqv? expt op)
-            'right
-            (error "unknown operator" op)))))
-
-    (define operators (list + - * / expt))
+      (operator-associativity (table-ref operators op)))
 
     (define lparen #\x28)
     (define rparen #\x29)))
