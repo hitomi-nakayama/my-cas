@@ -1,5 +1,7 @@
 (define-library (parser)
-  (export operator? shunting-yard)
+  (export operator?
+          rpn-to-sexpr
+          shunting-yard)
   (import (scheme base)
           (scheme write)
           (srfi 1)
@@ -47,6 +49,26 @@
             (else (error "Invalid token" lookahead))))
           (append (reverse output) operator-stack)))
 
+    (define (rpn-to-sexpr rpn)
+      (rpn-to-sexpr-impl rpn '()))
+
+    (define (rpn-to-sexpr-impl rpn stack)
+      (if (not (null? rpn))
+        (let ((lookahead (car rpn)))
+          (cond
+            ((number? lookahead) (rpn-to-sexpr-impl (cdr rpn)
+                                                    (cons lookahead stack)))
+            ((operator? lookahead)
+              (let* ((op lookahead)
+                     (rhs (car stack))
+                     (lhs (cadr stack))
+                     (rest-of-stack (cddr stack))
+                     (sexpr (list op lhs rhs)))
+                (rpn-to-sexpr-impl (cdr rpn)
+                                   (cons sexpr rest-of-stack))))
+            (else (error "Invalid token" lookahead))))
+        (car stack)))
+
     (define-record-type <operator-attr>
       (operator-attr precedence associativity)
       operator-attr?
@@ -55,11 +77,11 @@
 
     (define operators
       (table ()
-        ((+) (operator-attr 1 'left))
-        ((-) (operator-attr 1 'left))
-        ((*) (operator-attr 2 'left))
-        ((/) (operator-attr 2 'left))
-        ((expt) (operator-attr 3 'right))))
+        (('+) (operator-attr 1 'left))
+        (('-) (operator-attr 1 'left))
+        (('*) (operator-attr 2 'left))
+        (('/) (operator-attr 2 'left))
+        (('expt) (operator-attr 3 'right))))
 
     (define (operator? token)
       (table-has-key? operators token))

@@ -10,12 +10,12 @@
 (test-begin "tests")
 
 ; ======== parser ========
-(test "operator?-plus" #t (operator? +))
+(test "operator?-plus" #t (operator? '+))
 (test "operator?-number" #f (operator? 123))
-(test "shunting-yard-simple" (list 3 4 +)
-                             (shunting-yard (list 3 + 4)))
-(test "shunting-yard" (list 3 4 2 * 1 5 - 2 3 expt expt / +)
-                      (shunting-yard (list 3 + 4 * 2 / #\( 1 - 5 #\) expt 2 expt 3)))
+(test "shunting-yard-simple" '(3 4 +)
+                             (shunting-yard '(3 + 4)))
+(test "shunting-yard" '(3 4 2 * 1 5 - 2 3 expt expt / +)
+                      (shunting-yard '(3 + 4 * 2 / #\( 1 - 5 #\) expt 2 expt 3)))
 
 ; ======== strings ========
 (test "concat" "a1b2" (concat "a" 1 "b" 2))
