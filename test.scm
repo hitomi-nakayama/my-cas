@@ -1,13 +1,23 @@
 (import (scheme base)
         (scheme write)
         (srfi 1)
+        (srfi 26)
         (chibi test)
+        (constants)
+        (monad)
         (parser)
         (table)
         (tokens)
         (strings))
 
 (test-begin "tests")
+
+; ======== monad ========
+(let ((add-one (lambda (unit x) (unit (+ x 1)))))
+  (test "just-add-one-just" (just 2) (=<< add-one (just 1)))
+  (test "just-add-one-nothing" (nothing) (=<< add-one (nothing)))
+  (test "just-add-one-associativity" (=<< (lambda (u x) (=<< add-one (add-one u x))) (just 1))
+                                     (=<< add-one (=<< add-one (just 1)))))
 
 ; ======== parser ========
 (test "operator?-plus" #t (operator? '+))
@@ -38,8 +48,12 @@
   (test "table-find-no-key-eq-pair" (cons 1 11) (table-find-pair my-table 1)))
 
 ; ======== tokens ========
-(test "string-split" (list "abc" "def" "ghi") (string-split "abc def ghi" #\space))
-(test "string-split-single" (list "test") (string-split "test" #\space))
+(test "tokenize" '(1 2 3) (tokenize "1 2 3"))
+(test "tokenize-expression" `(2 * (unquote lparen) 1 + 3 (unquote rparen))
+                            (tokenize "2 * (1 + 3)"))
+(test "string-split" (list "abc" "def" "ghi") (string-split "abc def ghi" (cut eqv? #\space <>)))
+(test "string-split" (list "(" "a") (string-split "(a" (cut eqv? lparen <>)))
+(test "string-split-single" (list "test") (string-split "test" (cut eqv? #\space <>)))
 
 
 (test-end "tests")
