@@ -25,7 +25,7 @@
 (test "shunting-yard-simple" '(3 4 +)
                              (shunting-yard '(3 + 4)))
 (test "shunting-yard" '(3 4 2 * 1 5 - 2 3 expt expt / +)
-                      (shunting-yard '(3 + 4 * 2 / #\( 1 - 5 #\) expt 2 expt 3)))
+                      (shunting-yard '(3 + 4 * 2 / lpar 1 - 5 rpar expt 2 expt 3)))
 (test "rpn-to-sexp-add-mul" '(+ 3 (* 4 2))
                             (rpn-to-sexp '(3 4 2 * +)))
 (test "rpn-to-sexp-expt" '(expt  2 8)
@@ -49,11 +49,10 @@
 
 ; ======== tokens ========
 (test "tokenize" '(1 2 3) (tokenize "1 2 3"))
-(test "tokenize-expression" `(2 * (unquote lparen) 1 + 3 (unquote rparen))
+(test "tokenize-expression" '(2 * lpar 1 + 3 rpar)
                             (tokenize "2 * (1 + 3)"))
-(test "string-split" (list "abc" "def" "ghi") (string-split "abc def ghi" (cut eqv? #\space <>)))
-(test "string-split" (list "(" "a") (string-split "(a" (cut eqv? lparen <>)))
-(test "string-split-single" (list "test") (string-split "test" (cut eqv? #\space <>)))
+(test "tokenize-complex-expression" '(lpar 1 + 2 rpar * 3.3 expt 9 4 * 3i)
+                                    (tokenize "(1 + 2) * 3.3 ^ 9 4 * 3i"))
 
 
 (test-end "tests")

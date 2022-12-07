@@ -36,13 +36,13 @@
                 (shunting-yard-impl (cdr tokens)
                                     (cons lookahead rest-of-stack)
                                     (append (reverse popped-operators) output))))
-            ((eq? lookahead lparen) (shunting-yard-impl (cdr tokens)
+            ((eq? lookahead 'lpar) (shunting-yard-impl (cdr tokens)
                                                         (cons lookahead operator-stack)
                                                         output))
-            ((eq? lookahead rparen)
+            ((eq? lookahead 'rpar)
               (let-values (((popped-operators rest-of-stack) (break
                                                                 (lambda (x)
-                                                                  (eqv? x lparen))
+                                                                  (eqv? x 'lpar))
                                                                 operator-stack)))
                 (shunting-yard-impl (cdr tokens)
                                     (cdr rest-of-stack) ; remove lparen at top

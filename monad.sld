@@ -21,6 +21,10 @@
     ; where context is (<context-name> <fields> <bind>)
     ; where fields is a list of symbols held by the monad
     ; and bind takes the arguments <func> <data> and returns a monad
+    ;
+    ; the macro will create a function <name>? that returns true if the argument is of the monad
+    ; the macro will create a function <name>-return that returns a monad
+    ; the macro will create a function <context-name>? that returns true if the argument is of the context
     (define-syntax monad
       (sc-macro-transformer
         (lambda (exp env)
