@@ -13,11 +13,11 @@
 (test-begin "tests")
 
 ; ======== monad ========
-(let ((add-one (lambda (unit x) (unit (+ x 1)))))
-  (test "just-add-one-just" (just 2) (=<< add-one (just 1)))
-  (test "just-add-one-nothing" (nothing) (=<< add-one (nothing)))
-  (test "just-add-one-associativity" (=<< (lambda (u x) (=<< add-one (add-one u x))) (just 1))
-                                     (=<< add-one (=<< add-one (just 1)))))
+; (let ((add-one (lambda (unit x) (unit (+ x 1)))))
+;   (test "just-add-one-just" (just 2) (=<< add-one (just 1)))
+;   (test "just-add-one-nothing" (nothing) (=<< add-one (nothing)))
+;   (test "just-add-one-associativity" (=<< (lambda (u x) (=<< add-one (add-one u x))) (just 1))
+;                                      (=<< add-one (=<< add-one (just 1)))))
 
 ; ======== parser ========
 (test "operator?-plus" #t (operator? '+))

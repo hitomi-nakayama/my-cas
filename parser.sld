@@ -5,6 +5,7 @@
   (import (scheme base)
           (scheme write)
           (srfi 1)
+          (constants)
           (output)
           (table))
   (begin
@@ -93,7 +94,4 @@
       (eqv? (associativity op) 'left))
 
     (define (associativity op)
-      (operator-associativity (table-ref operators op)))
-
-    (define lparen #\x28)
-    (define rparen #\x29)))
+      (operator-associativity (table-ref operators op)))))
