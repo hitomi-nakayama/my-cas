@@ -1,5 +1,6 @@
 (define-library (parser)
-  (export operator?
+  (export infix->sexp
+          operator?
           rpn-to-sexp
           shunting-yard)
   (import (scheme base)
@@ -9,6 +10,9 @@
           (output)
           (table))
   (begin
+    (define (infix->sexp tokens)
+      (rpn-to-sexp (shunting-yard tokens)))
+
     (define (shunting-yard tokens)
       (shunting-yard-impl tokens '() '()))
 
